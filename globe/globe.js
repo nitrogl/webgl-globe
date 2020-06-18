@@ -561,12 +561,10 @@ DAT.Globe = function(container, opts) {
   }
 
 
-  function onWindowResize( event ) {
-//     if (pinchZoomEnabled) {
+  function onWindowResize(event) {
     camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize( window.innerWidth, window.innerHeight );
-//     }
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
   function zoom(delta) {
