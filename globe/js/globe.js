@@ -307,7 +307,7 @@ DAT.Globe = function(container, opts) {
     container.style.color = '#fff';
     container.style.font = '13px/20px Arial, sans-serif ';
 
-    var shader, uniforms, material, w, h;
+    var shader, uniforms, material, loader, w, h;
     
     w = container.offsetWidth || window.innerWidth;
     h = container.offsetHeight || window.innerHeight;
@@ -316,13 +316,14 @@ DAT.Globe = function(container, opts) {
     camera.position.z = distance;
 
     scene = new THREE.Scene();
+    loader = new THREE.TextureLoader();
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
 
     shader = Shaders['earth'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world.jpg');
+    uniforms['texture'].value = loader.load(imgDir + 'world.jpg');
 
     material = new THREE.ShaderMaterial({
 
