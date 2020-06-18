@@ -283,7 +283,7 @@ DAT.Globe = function(container, opts) {
     if (pinchZoomEnabled) {
       var dist = getPinchDistance(event)
       if (dist != null) {
-        zoom(dist);
+        zoom(dist*0.3);
       }
     }
   }
@@ -307,7 +307,8 @@ DAT.Globe = function(container, opts) {
     container.style.color = '#fff';
     container.style.font = '13px/20px Arial, sans-serif ';
 
-    var shader, uniforms, material;
+    var shader, uniforms, material, w, h;
+    
     w = container.offsetWidth || window.innerWidth;
     h = container.offsetHeight || window.innerHeight;
 
@@ -362,6 +363,7 @@ DAT.Globe = function(container, opts) {
         antialias: true
       , alpha: true
     });
+    
     renderer.setSize(w, h);
 
     renderer.domElement.style.position = 'absolute';
@@ -562,9 +564,14 @@ DAT.Globe = function(container, opts) {
 
 
   function onWindowResize(event) {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    var w, h;
+    
+    w = container.offsetWidth || window.innerWidth;
+    h = container.offsetHeight || window.innerHeight;
+    
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(w, h);
   }
 
   function zoom(delta) {
