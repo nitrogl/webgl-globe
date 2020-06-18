@@ -329,7 +329,7 @@ DAT.Globe = function(container, opts) {
           map: textureLoader.load(textureGlobe)
         , bumpMap: textureLoader.load(imgDir + 'world-bump.jpg')
         , specularMap: textureLoader.load(imgDir + 'world-specular.jpg')
-        , specular: new THREE.Color("#9cc1d7")
+        , specular: new THREE.Color(light)
       });
     } else {
       shader = Shaders['earth'];
@@ -349,8 +349,8 @@ DAT.Globe = function(container, opts) {
     
     if (light) {
       // Light
-      var directionalLight = new THREE.DirectionalLight(13421772, .6);
-      var ambientLight = new THREE.AmbientLight(8947848);
+      var directionalLight = new THREE.DirectionalLight(1342177, .6);
+      var ambientLight = new THREE.AmbientLight(15000000);
       scene.add(ambientLight);
       scene.add(directionalLight);
     }
