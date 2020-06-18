@@ -367,7 +367,7 @@ DAT.Globe = function(container, opts) {
 
     container.addEventListener('mousedown', onMouseDown, false);
 
-    container.addEventListener('mousewheel', onMouseWheel, false);
+    container.addEventListener('wheel', onMouseWheel, false);
 
     addTouchHandlers(container);
 
@@ -539,7 +539,7 @@ DAT.Globe = function(container, opts) {
   function onMouseWheel(event) {
     event.preventDefault();
     if (overRenderer) {
-      zoom(event.wheelDeltaY * 0.3);
+      zoom(-20*Math.sign(event.deltaY));
     }
     return false;
   }
