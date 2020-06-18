@@ -562,12 +562,11 @@ DAT.Globe = function(container, opts) {
 
 
   function onWindowResize( event ) {
-    // this method fights with pinch zooming, needs to be disabled if pinch zooming
-    if (pinchZoomEnabled) {
+//     if (pinchZoomEnabled) {
       camera.aspect = container.offsetWidth / container.offsetHeight;
       camera.updateProjectionMatrix();
       renderer.setSize( container.offsetWidth, container.offsetHeight );
-    }
+//     }
   }
 
   function zoom(delta) {
@@ -583,6 +582,9 @@ DAT.Globe = function(container, opts) {
 
   function render() {
     zoom(curZoomSpeed);
+
+    // Rotation
+    target.x -= 0.001;
 
     rotation.x += (target.x - rotation.x) * 0.1;
     rotation.y += (target.y - rotation.y) * 0.1;
