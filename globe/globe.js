@@ -319,7 +319,7 @@ DAT.Globe = function(container, opts) {
     var geometry = new THREE.SphereGeometry(200, 40, 30);
 
     shader = Shaders['earth'];
-    uniforms = THREE.Unif ormsUtils.clone(shader.uniforms);
+    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world.jpg');
 
@@ -336,7 +336,7 @@ DAT.Globe = function(container, opts) {
     scene.add(mesh);
 
     shader = Shaders['atmosphere'];
-    uniforms = THREE.Unif ormsUtils.clone(shader.uniforms);
+    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     material = new THREE.ShaderMaterial({
 
@@ -358,7 +358,10 @@ DAT.Globe = function(container, opts) {
 
     point = new THREE.Mesh(geometry);
 
-    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer = new THREE.WebGLRenderer({
+        antialias: true
+      , alpha: true
+    });
     renderer.setSize(w, h);
 
     renderer.domElement.style.position = 'absolute';
