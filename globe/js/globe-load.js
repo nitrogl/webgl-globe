@@ -5,9 +5,10 @@ if(!Detector.webgl){
   var years = ['1990','1995','2000'];
   var container = document.getElementById('container');
   var globe = new DAT.Globe(container, {
-      imgDir: '../img/'
+      imgDir: 'img/'
     , imgGlobe: 'world-dark-blue.jpg'
     , light: "#cbdeea"
+    , pinchZoomEnabled: true
     , imgSkybox: [
           'stars.jpg'
         , 'stars.jpg'
@@ -46,7 +47,7 @@ if(!Detector.webgl){
   
   
   xhr = new XMLHttpRequest();
-  xhr.open('GET', '../data/population909500.json', true);
+  xhr.open('GET', 'data/population909500.json', true);
   xhr.onreadystatechange = function(e) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
