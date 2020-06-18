@@ -105,7 +105,7 @@ DAT.Globe = function(container, opts) {
     var touch;
 
     // Ignore multi-touch events
-    if(event.originalEvent){
+    if (event.originalEvent) {
       touch = event.originalEvent.changedTouches[0];
 
       if (event.originalEvent.touches.length == 2) {
@@ -115,23 +115,20 @@ DAT.Globe = function(container, opts) {
         onPinch(event);
 
         return;
-      }
-      else if (event.originalEvent.touches.length > 2){
+      } else if (event.originalEvent.touches.length > 2) {
         return;
       }
-    }
-    else if(event.touches){
+    } else if (event.touches) {
       touch = event.changedTouches[0];
 
-      if(event.touches.length == 2){
+      if (event.touches.length == 2) {
         //handle pinching
         isPinchScaling = true;
         pinchStartX = event.touches[0].clientX;
         onPinch(event);
 
         return;
-      }
-      else if(event.touches.length > 2){
+      } else if (event.touches.length > 2) {
         return;
       }
     }
@@ -163,9 +160,9 @@ DAT.Globe = function(container, opts) {
     event.target.dispatchEvent(simulatedEvent);
   }
 
-  function resetZoomOnDoubleTap(event){
+  function resetZoomOnDoubleTap(event) {
     // check for double tap
-    if(pinchZoomEnabled) {
+    if (pinchZoomEnabled) {
       if ((event.originalEvent && event.originalEvent.touches.length == 1) ||
         (event.touches && event.touches.length == 1)) {
 
@@ -191,7 +188,7 @@ DAT.Globe = function(container, opts) {
     var self = this;
 
     // Ignore the event if another widget is already being handled
-    if (touchHandled){
+    if (touchHandled) {
       return;
     }
 
@@ -213,7 +210,7 @@ DAT.Globe = function(container, opts) {
 
 
   function _onTouchMove(event) {
-    if(isPinchScaling){
+    if (isPinchScaling) {
       onPinch(event);
       return;
     }
@@ -232,7 +229,7 @@ DAT.Globe = function(container, opts) {
 
   function _onTouchEnd(event) {
 
-    if(isPinchScaling){
+    if (isPinchScaling) {
       onPinch(event);
       isPinchScaling = false
       return;
@@ -260,10 +257,10 @@ DAT.Globe = function(container, opts) {
     touchHandled = false;
   }
 
-  function getPinchDistance(event){
+  function getPinchDistance(event) {
     var dist;
 
-    try{
+    try {
       dist = Math.sqrt(
         (event.touches[0].clientX-event.touches[1].clientX) * (event.touches[0].clientX-event.touches[1].clientX) +
         (event.touches[0].clientY-event.touches[1].clientY) * (event.touches[0].clientY-event.touches[1].clientY)
@@ -275,30 +272,29 @@ DAT.Globe = function(container, opts) {
       var dir = (pinchStartX > event.touches[0].clientX) ? 1 : -1;
 
       dist = dist * dir;
-    }
-    catch(e){
+    } catch(e) {
       dist = null;
     }
 
     return dist;
   }
 
-  function onPinch(event){
-    if(pinchZoomEnabled){
+  function onPinch(event) {
+    if (pinchZoomEnabled) {
       var dist = getPinchDistance(event)
-      if(dist != null){
+      if (dist != null) {
         zoom(dist);
       }
     }
   }
 
 
-  function addTouchHandlers(container){
+  function addTouchHandlers(container) {
 
     var touchSupport = 'ontouchend' in document;
 
     //ignore browsers without touch
-    if(!touchSupport){
+    if (!touchSupport) {
       return;
     }
 
@@ -309,7 +305,7 @@ DAT.Globe = function(container, opts) {
   function init() {
 
     container.style.color = '#fff';
-    container.style.font = '13px/20px Arial, sans-serif';
+    container.style.font = '13px/20px Arial, sans-serif ';
 
     var shader, uniforms, material;
     w = container.offsetWidth || window.innerWidth;
@@ -323,7 +319,7 @@ DAT.Globe = function(container, opts) {
     var geometry = new THREE.SphereGeometry(200, 40, 30);
 
     shader = Shaders['earth'];
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    uniforms = THREE.Unif ormsUtils.clone(shader.uniforms);
 
     uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world.jpg');
 
@@ -340,7 +336,7 @@ DAT.Globe = function(container, opts) {
     scene.add(mesh);
 
     shader = Shaders['atmosphere'];
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    uniforms = THREE.Unif ormsUtils.clone(shader.uniforms);
 
     material = new THREE.ShaderMaterial({
 
@@ -416,7 +412,7 @@ DAT.Globe = function(container, opts) {
           addPoint(lat, lng, size, color, this._baseGeometry);
         }
       }
-      if(this._morphTargetId === undefined) {
+      if (this._morphTargetId === undefined) {
         this._morphTargetId = 0;
       } else {
         this._morphTargetId += 1;
@@ -487,7 +483,7 @@ DAT.Globe = function(container, opts) {
       point.geometry.faces[i].color = color;
 
     }
-    if(point.matrixAutoUpdate){
+    if (point.matrixAutoUpdate) {
       point.updateMatrix();
     }
     subgeo.merge(point.geometry, point.matrix);
@@ -564,7 +560,7 @@ DAT.Globe = function(container, opts) {
 
   function onWindowResize( event ) {
     // this method fights with pinch zooming, needs to be disabled if pinch zooming
-    if(pinchZoomEnabled){
+    if (pinchZoomEnabled) {
       camera.aspect = container.offsetWidth / container.offsetHeight;
       camera.updateProjectionMatrix();
       renderer.setSize( container.offsetWidth, container.offsetHeight );
@@ -610,7 +606,7 @@ DAT.Globe = function(container, opts) {
     var validMorphs = [];
     var morphDict = this.points.morphTargetDictionary;
     for(var k in morphDict) {
-      if(k.indexOf('morphPadding') < 0) {
+      if (k.indexOf('morphPadding') < 0) {
         validMorphs.push(morphDict[k]);
       }
     }
