@@ -85,6 +85,9 @@ DAT.Globe = function(container, opts) {
   var padding = 40;
   var PI_HALF = Math.PI / 2;
 
+  var textureGlobe  = imgDir + (opts.imgGlobe || 'world.jpg');
+  var textureSkybox = opts.imgSkybox ? opts.imgSkybox.map(t => imgDir + t) : undefined;
+  var light = opts.light || false;
 
   var touchHandled;
   var isPinchScaling;
@@ -316,44 +319,71 @@ DAT.Globe = function(container, opts) {
     camera.position.z = distance;
 
     scene = new THREE.Scene();
-    loader = new THREE.TextureLoader();
+    textureLoader = new THREE.TextureLoader();
+    cubeTextureLoader = new THREE.CubeTextureLoader();
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
 
-    shader = Shaders['earth'];
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    if (light) {
+      material = new THREE.MeshPhongMaterial({
+          map: textureLoader.load(textureGlobe)
+        , bumpMap: textureLoader.load(imgDir + 'world-bump.jpg')
+        , specularMap: textureLoader.load(imgDir + 'world-specular.jpg')
+        , specular: new THREE.Color("#9cc1d7")
+      });
+    } else {
+      shader = Shaders['earth'];
+      uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms['texture'].value = loader.load(imgDir + 'world.jpg');
-
-    material = new THREE.ShaderMaterial({
-
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader
-
-        });
+      uniforms['texture'].value = textureLoader.load(textureGlobe);
+      material = new THREE.ShaderMaterial({
+          uniforms: uniforms
+        , vertexShader: shader.vertexShader
+        , fragmentShader: shader.fragmentShader
+      });
+    }
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = Math.PI;
     scene.add(mesh);
+    
+    if (light) {
+      // Light
+      var directionalLight = new THREE.DirectionalLight(13421772, .6);
+      var ambientLight = new THREE.AmbientLight(8947848);
+      scene.add(ambientLight);
+      scene.add(directionalLight);
+    }
 
     shader = Shaders['atmosphere'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     material = new THREE.ShaderMaterial({
-
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader,
-          side: THREE.BackSide,
-          blending: THREE.AdditiveBlending,
-          transparent: true
-
-        });
+        uniforms: uniforms
+      , vertexShader: shader.vertexShader
+      , fragmentShader: shader.fragmentShader
+      , side: THREE.BackSide
+      , blending: THREE.AdditiveBlending
+      , transparent: true
+    });
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.scale.set( 1.1, 1.1, 1.1 );
     scene.add(mesh);
+    
+    if (textureSkybox) {
+      shader = THREE.ShaderLib["cube"];
+      uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+      uniforms['tCube'].value = cubeTextureLoader.load(textureSkybox);
+      material = new THREE.ShaderMaterial({
+        fragmentShader: shader.fragmentShader,
+        vertexShader: shader.vertexShader,
+        uniforms: uniforms,
+        side: THREE.BackSide
+      });
+      mesh = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1, null, true), material);
+      scene.add(mesh);
+    }
 
     geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
     geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.5));
@@ -590,7 +620,7 @@ DAT.Globe = function(container, opts) {
     zoom(curZoomSpeed);
 
     // Rotation
-    target.x -= 0.001;
+    target.x -= 0.0001;
 
     rotation.x += (target.x - rotation.x) * 0.1;
     rotation.y += (target.y - rotation.y) * 0.1;
