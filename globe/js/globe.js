@@ -94,6 +94,9 @@ DAT.Globe = function(container, opts) {
   var pinchStartX;
   var clickTimer;
   
+  // Shape
+  var shape = opts.shape || "box";
+  
   // Distance
   var minDistance = opts.minDistance || 350;
   var maxDistance = opts.maxDistance || 1000;
@@ -388,11 +391,18 @@ DAT.Globe = function(container, opts) {
       mesh = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1, null, true), material);
       scene.add(mesh);
     }
-
-    geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
-    geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.5));
-
-    point = new THREE.Mesh(geometry);
+    
+    switch (shape) {
+      case "cylinder":
+        pointShape = new CylinderShape();
+        break;
+        
+      default:
+        console.log("Unrecognised shape: " + shape);
+      case "box":
+        pointShape = new BoxShape();
+        break;
+    }
 
     renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -505,28 +515,14 @@ DAT.Globe = function(container, opts) {
   }
 
   function addPoint(lat, lng, size, color, subgeo) {
-
-    var phi = (90 - lat) * Math.PI / 180;
-    var theta = (180 - lng) * Math.PI / 180;
-
-    point.position.x = 200 * Math.sin(phi) * Math.cos(theta);
-    point.position.y = 200 * Math.cos(phi);
-    point.position.z = 200 * Math.sin(phi) * Math.sin(theta);
-
-    point.lookAt(mesh.position);
-
-    point.scale.z = Math.max( size, 0.1 ); // avoid non-invertible matrix
-    point.updateMatrix();
-
-    for (var i = 0; i < point.geometry.faces.length; i++) {
-
-      point.geometry.faces[i].color = color;
-
+    pointShape.setMagnitude(size);
+    pointShape.setPosition(lat, lng, mesh.position);
+    pointShape.setColour(color);
+    
+    if (pointShape.getPoint().matrixAutoUpdate) {
+      pointShape.getPoint().updateMatrix();
     }
-    if (point.matrixAutoUpdate) {
-      point.updateMatrix();
-    }
-    subgeo.merge(point.geometry, point.matrix);
+    subgeo.merge(pointShape.getPoint().geometry, pointShape.getPoint().matrix);
   }
 
   function onMouseDown(event) {
