@@ -9,6 +9,8 @@ if(!Detector.webgl){
     , imgGlobe: 'world-dark-blue.jpg'
     , light: "#cbdeea"
     , pinchZoomEnabled: true
+    , minDistance: 800 // default 350
+    , maxDistance: 1100 // default 1000
     , imgSkybox: [
           'stars.jpg'
         , 'stars.jpg'

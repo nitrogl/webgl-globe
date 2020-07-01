@@ -93,6 +93,10 @@ DAT.Globe = function(container, opts) {
   var isPinchScaling;
   var pinchStartX;
   var clickTimer;
+  
+  // Distance
+  var minDistance = opts.minDistance || 350;
+  var maxDistance = opts.maxDistance || 1000;
 
   //disabled pinch zooming by default due to as weird bugs in Safari but leaving in, in case someone else can fix it
   var pinchZoomEnabled = opts.pinchZoomEnabled || false;
@@ -607,8 +611,8 @@ DAT.Globe = function(container, opts) {
 
   function zoom(delta) {
     distanceTarget -= delta;
-    distanceTarget = distanceTarget > 1000 ? 1000 : distanceTarget;
-    distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
+    distanceTarget = distanceTarget > maxDistance ? maxDistance : distanceTarget;
+    distanceTarget = distanceTarget < minDistance ? minDistance : distanceTarget;
   }
 
   function animate() {
