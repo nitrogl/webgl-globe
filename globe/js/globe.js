@@ -410,19 +410,14 @@ DAT.Globe = function(container, opts) {
     });
     
     renderer.setSize(w, h);
-
     renderer.domElement.style.position = 'absolute';
 
     container.appendChild(renderer.domElement);
-
     container.addEventListener('mousedown', onMouseDown, false);
-
     container.addEventListener('wheel', onMouseWheel, false);
 
     addTouchHandlers(container);
-
     document.addEventListener('keydown', onDocumentKeyDown, false);
-
     window.addEventListener('resize', onWindowResize, false);
 
     container.addEventListener('mouseover', function() {
@@ -534,8 +529,6 @@ DAT.Globe = function(container, opts) {
 
     container.addEventListener('touchend', _onTouchEnd, false);
     container.addEventListener('touchmove', _onTouchMove, false);
-
-
 
     mouseOnDown.x = - event.clientX;
     mouseOnDown.y = event.clientY;
@@ -655,7 +648,8 @@ DAT.Globe = function(container, opts) {
     var l = validMorphs.length-1;
     var scaledt = t*l+1;
     var index = Math.floor(scaledt);
-    for (i=0;i<validMorphs.length;i++) {
+    this.points.updateMorphTargets();
+    for (i = 0; i < validMorphs.length; i++) {
       this.points.morphTargetInfluences[validMorphs[i]] = 0;
     }
     var lastIndex = index - 1;
